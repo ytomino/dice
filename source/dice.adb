@@ -137,26 +137,27 @@ begin
 		end Put;
 		Gen : aliased SFMT_19937.Generator;
 	begin
+		declare
+			procedure Report (Message : in String) is
+			begin
+				Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Error.all);
+				Ada.Text_IO.Put (Message);
+				Ada.Text_IO.Put (": ");
+				Ada.Text_IO.Put (State_Name);
+				Ada.Text_IO.New_Line;
+				Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Output.all);
+			end Report;
 		begin
 			Load (Gen, State_Name);
 		exception
 			when Ada.Text_IO.Data_Error =>
-				Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Error.all);
-				Ada.Text_IO.Put ("The broken state file: ");
-				Ada.Text_IO.Put (State_Name);
-				Ada.Text_IO.New_Line;
-				Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Output.all);
+				Report ("The broken state file");
 				SFMT_19937.Reset (Gen);
+				Save (Gen, State_Name);
 			when Ada.Text_IO.Name_Error =>
-				Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Error.all);
-				Ada.Text_IO.Put ("Initialized.");
-				if not Dry_Run then
-					Ada.Text_IO.Put (" The state file: ");
-					Ada.Text_IO.Put (State_Name);
-				end if;
-				Ada.Text_IO.New_Line;
-				Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Output.all);
+				Report ("Initialized");
 				SFMT_19937.Reset (Gen);
+				Save (Gen, State_Name);
 		end;
 		case Mode is
 			when Repetition =>
