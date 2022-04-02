@@ -50,11 +50,11 @@ procedure dice is
 		P ("Cast dices with the pseudo random number generator.");
 		Ada.Text_IO.New_Line;
 		P ("Options: ");
-		P ("  -C --combination      Use ""combination without rerepetition"" (nCk)");
+		P ("  -C --combination      Use ""combination without repetition"" (nCk)");
 		P ("  -h --help             Display this information");
 		P ("  -n --dry-run          "
 			& "Do not save the the pseudo random number sequence");
-		P ("  -P --sequence         Use ""sequence without rerepetition"" (nPk)");
+		P ("  -P --sequence         Use ""sequence without repetition"" (nPk)");
 		P ("     --repetition       Cast a dice with N faces K times (default)");
 	end Help;
 	package Parsing renames Ada.Command_Line.Parsing;
