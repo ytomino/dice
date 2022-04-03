@@ -1,7 +1,6 @@
 with Ada.Command_Line;
 with Ada.Command_Line.Parsing;
 with Ada.Containers.Generic_Constrained_Array_Sort;
-with Ada.Directories;
 with Ada.Environment_Variables;
 with Ada.Hierarchical_File_Names;
 with Ada.Long_Long_Integer_Text_IO;
