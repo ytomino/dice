@@ -26,7 +26,7 @@ else
 endif
 
 CFLAGS=-pipe
-CFLAGS_ADA=-gnatA $(addprefix -gnatec=,$(wildcard *.adc)) -gnatef -gnatwaI
+CFLAGS_ADA=-gnatef -gnatwaI
 LDFLAGS=
 
 ifneq ($(findstring freebsd,$(TARGET)),)
@@ -71,7 +71,7 @@ ifneq ($(DRAKE_RTSROOT),)
 endif
 
 GARGS=$(addprefix --RTS=,$(DRAKE_RTSDIR))
-MARGS=-C -D $(BUILDDIR)
+MARGS=-C -D $(BUILDDIR) -gnatA $(addprefix -gnatec=,$(wildcard *.adc))
 CARGS=$(CFLAGS) $(CFLAGS_ADA)
 BARGS=-E -x
 LARGS=$(LDFLAGS)
