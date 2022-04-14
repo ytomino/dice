@@ -27,7 +27,7 @@ endif
 
 GARGS:=
 MARGS:=-C -D $(BUILDDIR)
-CARGS:=-pipe -gnatef -gnatwaI -gnatA $(addprefix -gnatec=,$(abspath $(wildcard *.adc)))
+CARGS:=-pipe -gnatef -gnatwaI -gnatA $(addprefix -gnatec=,$(wildcard *.adc))
 BARGS:=-x
 LARGS:=
 FARGS:=
