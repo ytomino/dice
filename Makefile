@@ -25,42 +25,39 @@ else
  LINK=gc
 endif
 
-GARGS:=
-MARGS:=-C -D $(BUILDDIR)
-CARGS:=-pipe -gnatef -gnatwaI -gnatA $(addprefix -gnatec=,$(wildcard *.adc))
-BARGS:=-x
-LARGS:=
-FARGS:=
+CFLAGS=-pipe
+CFLAGS_ADA=-gnatA $(addprefix -gnatec=,$(wildcard *.adc)) -gnatef -gnatwaI
+LDFLAGS=
 
 ifneq ($(findstring freebsd,$(TARGET)),)
- LARGS:=$(LARGS) -lm -lgcc_eh -lpthread
+ LDFLAGS+=-lm -lgcc_eh -lpthread
 endif
 
 ifeq ($(LINK),gc)
  ifneq ($(findstring darwin,$(TARGET)),)
-  LARGS:=$(LARGS) -dead_strip
+  LDFLAGS+=-dead_strip
   ifneq ($(WHYLIVE),)
-   LARGS:=$(LARGS) -Wl,-why_live,$(WHYLIVE)
+   LDFLAGS+=-Wl,-why_live,$(WHYLIVE)
   endif
  else
-  CARGS:=$(CARGS) -ffunction-sections -fdata-sections
-  LARGS:=$(LARGS) -Wl,--gc-sections
+  CFLAGS+=-ffunction-sections -fdata-sections
+  LDFLAGS+=-Wl,--gc-sections
  endif
 else ifeq ($(LINK),lto)
- CARGS:=$(CARGS) -flto
- LARGS:=$(LARGS) -flto
+ CFLAGS+=-flto
+ LDFLAGS+=-flto
 endif
 
 ifeq ($(BUILD),debug)
- CARGS:=$(CARGS) -ggdb -Og -fno-guess-branch-probability -gnata
- BARGS:=$(BARGS) -E
- LARGS:=$(LARGS) -ggdb -Og
+ CFLAGS+=-ggdb -Og -fno-guess-branch-probability
+ CFLAGS_ADA+=-gnata
+ LDFLAGS+=-ggdb -Og
 else
- CARGS:=$(CARGS) -ggdb1 -Os -gnatB -gnatVn -gnatn2
- BARGS:=$(BARGS) -E
- LARGS:=$(LARGS) -ggdb1 -Os
+ CFLAGS+=-ggdb1 -Os
+ CFLAGS_ADA+=-gnatB -gnatn2 -gnatVn
+ LDFLAGS+=-ggdb1 -Os
  ifneq ($(findstring freebsd,$(TARGET))$(findstring linux-gnu,$(TARGET)),)
-  LARGS:=$(LARGS) -Wl,--compress-debug-sections=zlib
+  LDFLAGS+=-Wl,--compress-debug-sections=zlib
  endif
 endif
 
@@ -73,9 +70,12 @@ ifneq ($(DRAKE_RTSROOT),)
  endif
 endif
 
-ifneq ($(DRAKE_RTSDIR),)
- GARGS:=$(GARGS) --RTS=$(DRAKE_RTSDIR)
-endif
+GARGS=$(addprefix --RTS=,$(DRAKE_RTSDIR))
+MARGS=-C -D $(BUILDDIR)
+CARGS=$(CFLAGS) $(CFLAGS_ADA)
+BARGS=-E -x
+LARGS=$(LDFLAGS)
+FARGS=
 
 DESTDIR=
 PREFIX=/usr/local
