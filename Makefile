@@ -97,6 +97,7 @@ $(BUILDDIR):
 	mkdir -p $@
 
 clean:
+	-$(if $(BINLN),[ -h "$(BINLN)" ] && rm "$(BINLN)")
 	-rm -r $(BUILDDIR)
 
 install: install-bin
